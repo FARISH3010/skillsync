@@ -1,0 +1,235 @@
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Theme tokens */
+  --primary-indigo: #6366F1;
+  --secondary-emerald: #10B981;
+  --tertiary-amber: #F59E0B;
+  --critical-crimson: #EF4444;
+}
+
+/* Dark Theme (Default) */
+.dark, :root:not(.light) {
+  --bg-canvas: #0B0F19;
+  --bg-surface: #0F172A;
+  --bg-surface-elevated: #171F33;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-subtle: #64748B;
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(15, 23, 42, 0.72);
+  --glass-bg-glow: rgba(15, 23, 42, 0.85);
+  --glass-card-interactive-bg: rgba(23, 31, 51, 0.55);
+  --glass-card-hover-bg: rgba(30, 41, 59, 0.75);
+  --header-bg: rgba(11, 15, 25, 0.85);
+  --card-subtle-bg: rgba(15, 23, 42, 0.6);
+  --pill-bg: rgba(15, 23, 42, 0.8);
+  --grid-line: rgba(255, 255, 255, 0.025);
+  --gauge-track: rgba(255, 255, 255, 0.06);
+}
+
+/* Light Theme */
+.light {
+  --bg-canvas: #F8FAFC;
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #F1F5F9;
+  --text-main: #0F172A;
+  --text-muted: #475569;
+  --text-subtle: #64748B;
+  --border-glass: rgba(15, 23, 42, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-bg-glow: rgba(255, 255, 255, 0.95);
+  --glass-card-interactive-bg: rgba(255, 255, 255, 0.75);
+  --glass-card-hover-bg: rgba(241, 245, 249, 0.95);
+  --header-bg: rgba(255, 255, 255, 0.85);
+  --card-subtle-bg: rgba(248, 250, 252, 0.8);
+  --pill-bg: rgba(241, 245, 249, 0.9);
+  --grid-line: rgba(15, 23, 42, 0.035);
+  --gauge-track: rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-canvas);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Glassmorphism Matrix Classes with CSS Variables */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+}
+
+.glass-panel-glow {
+  background: var(--glass-bg-glow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.28);
+  box-shadow: 0 12px 36px 0 rgba(99, 102, 241, 0.12);
+}
+
+.glass-card-interactive {
+  background: var(--glass-card-interactive-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-glass);
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-interactive:hover {
+  background: var(--glass-card-hover-bg);
+  border-color: rgba(99, 102, 241, 0.45);
+  transform: translateY(-3px) scale(1.003);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.15), 0 0 20px -2px rgba(99, 102, 241, 0.15);
+}
+
+/* Ambient Radial Lighting */
+.bg-glow-radial {
+  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 60%);
+}
+
+.bg-ambient-cockpit {
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(16, 185, 129, 0.05) 0%, transparent 35%),
+    radial-gradient(circle at 50% 90%, rgba(239, 68, 68, 0.04) 0%, transparent 45%);
+}
+
+.bg-cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+}
+
+/* Tactile Micro-Animations */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer-button {
+  background: linear-gradient(90deg, #6366F1 0%, #818CF8 50%, #6366F1 100%);
+  background-size: 200% 100%;
+  transition: all 0.3s ease;
+}
+
+.shimmer-button:hover {
+  background-position: right center;
+  box-shadow: 0 0 24px rgba(99, 102, 241, 0.45);
+}
+
+/* Skill Chip Hover & Active States */
+.skill-chip {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.skill-chip:active {
+  transform: scale(0.96);
+}
+
+.skill-chip-active {
+  background: rgba(99, 102, 241, 0.2) !important;
+  border-color: rgba(99, 102, 241, 0.7) !important;
+  color: #C0C1FF !important;
+  box-shadow: 0 0 16px -2px rgba(99, 102, 241, 0.4);
+}
+
+/* Dropzone pulse */
+@keyframes borderPulse {
+  0%, 100% { border-color: rgba(16, 185, 129, 0.4); }
+  50% { border-color: rgba(16, 185, 129, 0.85); box-shadow: 0 0 20px rgba(16, 185, 129, 0.25); }
+}
+
+.dropzone-active {
+  animation: borderPulse 1.8s infinite;
+}
+
+/* Light Mode Overrides for Slate Grays */
+.light .text-white {
+  color: #0F172A !important;
+}
+
+.light .text-slate-100 {
+  color: #0F172A !important;
+}
+
+.light .text-slate-200 {
+  color: #1E293B !important;
+}
+
+.light .text-slate-300 {
+  color: #334155 !important;
+}
+
+.light .text-slate-400 {
+  color: #64748B !important;
+}
+
+.light .bg-slate-900,
+.light .bg-slate-900\/80,
+.light .bg-slate-900\/90,
+.light .bg-slate-950 {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.light .bg-slate-800,
+.light .bg-slate-800\/60,
+.light .bg-slate-800\/50,
+.light .bg-slate-800\/80 {
+  background-color: #F1F5F9 !important;
+}
+
+.light .border-slate-800,
+.light .border-slate-700,
+.light .border-slate-700\/80,
+.light .border-white\/10 {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+.light .border-slate-800\/80 {
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+.light .hover\:bg-slate-800:hover {
+  background-color: #E2E8F0 !important;
+}
+
+.light .hover\:bg-slate-700:hover {
+  background-color: #CBD5E1 !important;
+}
+
+.light select,
+.light input,
+.light textarea {
+  color: #0F172A !important;
+  background-color: #FFFFFF !important;
+}

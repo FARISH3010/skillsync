@@ -1,0 +1,28 @@
+{
+  "id": "curr_aids_2024",
+  "curriculum_title": "B.Tech Artificial Intelligence & Data Science",
+  "institution": "Apex Institute of Science & Technology",
+  "academic_year": "2024-2025",
+  "courses": [
+    {
+      "code": "AIDS201",
+      "name": "Python Programming & Data Structures",
+      "description": "Python fundamentals, object-oriented concepts, arrays, trees, graphs, sorting algorithms, and algorithm complexity."
+    },
+    {
+      "code": "AIDS301",
+      "name": "Applied Machine Learning & Statistical Models",
+      "description": "Supervised learning, linear regression, decision trees, classification, model evaluation using scikit-learn and Python."
+    },
+    {
+      "code": "AIDS302",
+      "name": "Deep Learning & Neural Architectures",
+      "description": "Perceptrons, multi-layer networks, convolutional neural networks (CNN), backpropagation with PyTorch and TensorFlow."
+    },
+    {
+      "code": "AIDS401",
+      "name": "Database Systems & SQL Analytics",
+      "description": "Relational schema design, SQL querying, PostgreSQL database management, data normalization and ACID transactions."
+    }
+  ]
+}

@@ -1,0 +1,210 @@
+[
+  {
+    "id": "sk_react",
+    "name": "React.js",
+    "category": "Frontend Frameworks",
+    "aliases": ["react", "reactjs", "react.js"],
+    "importance_weight": 1.0,
+    "recommended_module": "Modern Frontend Development with React & Next.js"
+  },
+  {
+    "id": "sk_nextjs",
+    "name": "Next.js",
+    "category": "Frontend Frameworks",
+    "aliases": ["nextjs", "next.js", "next"],
+    "importance_weight": 0.85,
+    "recommended_module": "Server-Side Rendering & Fullstack Architecture with Next.js"
+  },
+  {
+    "id": "sk_typescript",
+    "name": "TypeScript",
+    "category": "Programming Languages",
+    "aliases": ["typescript", "ts"],
+    "importance_weight": 0.9,
+    "recommended_module": "Type-Safe Application Development with TypeScript"
+  },
+  {
+    "id": "sk_javascript",
+    "name": "JavaScript",
+    "category": "Programming Languages",
+    "aliases": ["javascript", "js", "es6"],
+    "importance_weight": 0.95,
+    "recommended_module": "Core Web Technologies & Advanced JavaScript"
+  },
+  {
+    "id": "sk_python",
+    "name": "Python",
+    "category": "Programming Languages",
+    "aliases": ["python", "python3", "py"],
+    "importance_weight": 0.95,
+    "recommended_module": "Advanced Python for Enterprise & AI Systems"
+  },
+  {
+    "id": "sk_java",
+    "name": "Java & Spring Boot",
+    "category": "Programming Languages",
+    "aliases": ["java", "spring boot", "spring", "jvm"],
+    "importance_weight": 0.85,
+    "recommended_module": "Enterprise Architecture with Spring Boot & Java"
+  },
+  {
+    "id": "sk_tailwind",
+    "name": "Tailwind CSS",
+    "category": "Frontend UI",
+    "aliases": ["tailwind", "tailwindcss", "tailwind css"],
+    "importance_weight": 0.75,
+    "recommended_module": "Modern Utility-First UI Styling with Tailwind"
+  },
+  {
+    "id": "sk_nodejs",
+    "name": "Node.js & Express",
+    "category": "Backend Development",
+    "aliases": ["nodejs", "node.js", "node", "express", "express.js"],
+    "importance_weight": 0.9,
+    "recommended_module": "Scalable REST APIs with Node.js and Express"
+  },
+  {
+    "id": "sk_fastapi",
+    "name": "FastAPI / Python",
+    "category": "Backend Development",
+    "aliases": ["fastapi", "python backend", "fast api"],
+    "importance_weight": 0.8,
+    "recommended_module": "High-Performance Asynchronous Python Microservices with FastAPI"
+  },
+  {
+    "id": "sk_graphql",
+    "name": "GraphQL APIs",
+    "category": "Backend Development",
+    "aliases": ["graphql", "apollo client", "apollo server", "graphql apis"],
+    "importance_weight": 0.85,
+    "recommended_module": "Modern API Architecture with GraphQL & Apollo"
+  },
+  {
+    "id": "sk_postgresql",
+    "name": "PostgreSQL & Relational SQL",
+    "category": "Databases",
+    "aliases": ["postgresql", "postgres", "sql", "relational database", "mysql"],
+    "importance_weight": 0.95,
+    "recommended_module": "Relational Database Design, Optimization, and Indexing"
+  },
+  {
+    "id": "sk_mongodb",
+    "name": "MongoDB & NoSQL",
+    "category": "Databases",
+    "aliases": ["mongodb", "nosql", "document database", "mongoose"],
+    "importance_weight": 0.8,
+    "recommended_module": "NoSQL Database Modeling with MongoDB & Document Stores"
+  },
+  {
+    "id": "sk_docker",
+    "name": "Docker & Containerization",
+    "category": "DevOps & Cloud",
+    "aliases": ["docker", "containerization", "containers", "dockerfile"],
+    "importance_weight": 0.9,
+    "recommended_module": "Containerization Fundamentals with Docker & Compose"
+  },
+  {
+    "id": "sk_kubernetes",
+    "name": "Kubernetes & Orchestration",
+    "category": "DevOps & Cloud",
+    "aliases": ["kubernetes", "k8s", "container orchestration", "helm"],
+    "importance_weight": 0.85,
+    "recommended_module": "Cloud-Native Container Orchestration with Kubernetes"
+  },
+  {
+    "id": "sk_aws",
+    "name": "Cloud Deployment (AWS / Cloud)",
+    "category": "DevOps & Cloud",
+    "aliases": ["aws", "cloud deployment", "s3", "ecs", "azure", "cloud", "gcp"],
+    "importance_weight": 0.85,
+    "recommended_module": "Cloud Infrastructure, Deployment & S3 Storage on AWS"
+  },
+  {
+    "id": "sk_cicd",
+    "name": "CI/CD Automation",
+    "category": "DevOps & Cloud",
+    "aliases": ["ci/cd", "continuous integration", "github actions", "pipeline", "jenkins", "gitlab ci"],
+    "importance_weight": 0.8,
+    "recommended_module": "Continuous Integration & Automated Testing Pipelines"
+  },
+  {
+    "id": "sk_redis",
+    "name": "Redis & Caching",
+    "category": "Databases & Architecture",
+    "aliases": ["redis", "caching", "in-memory cache", "key-value store"],
+    "importance_weight": 0.75,
+    "recommended_module": "High-Throughput Caching Strategies with Redis"
+  },
+  {
+    "id": "sk_kafka",
+    "name": "Kafka & Event Streaming",
+    "category": "System Architecture",
+    "aliases": ["kafka", "apache kafka", "event streaming", "message queues", "rabbitmq", "pubsub"],
+    "importance_weight": 0.85,
+    "recommended_module": "Event-Driven Microservices & Real-Time Data Streaming with Kafka"
+  },
+  {
+    "id": "sk_git",
+    "name": "Git & Version Control",
+    "category": "Developer Tools",
+    "aliases": ["git", "github", "version control", "gitlab"],
+    "importance_weight": 0.9,
+    "recommended_module": "Collaborative Git Workflows & Code Review Practices"
+  },
+  {
+    "id": "sk_microservices",
+    "name": "Microservices & System Design",
+    "category": "System Architecture",
+    "aliases": ["microservices", "system design", "distributed systems", "restful apis", "rest apis", "api gateway"],
+    "importance_weight": 0.85,
+    "recommended_module": "Distributed Systems, Microservices & API Gateway Design"
+  },
+  {
+    "id": "sk_testing",
+    "name": "Automated Testing (Unit & Integration)",
+    "category": "Software Quality",
+    "aliases": ["unit testing", "jest", "pytest", "automated testing", "junit", "integration tests", "cypress"],
+    "importance_weight": 0.8,
+    "recommended_module": "Test-Driven Development (TDD) with Pytest & Jest"
+  },
+  {
+    "id": "sk_dsa",
+    "name": "Data Structures & Algorithms",
+    "category": "Core Computer Science",
+    "aliases": ["data structures", "algorithms", "dsa", "dynamic programming", "graphs", "trees", "arrays"],
+    "importance_weight": 0.9,
+    "recommended_module": "Advanced Data Structures & Algorithmic Problem Solving"
+  },
+  {
+    "id": "sk_machine_learning",
+    "name": "Machine Learning & Scikit-Learn",
+    "category": "AI & Data Science",
+    "aliases": ["machine learning", "ml", "scikit-learn", "supervised learning", "regression", "classification"],
+    "importance_weight": 0.9,
+    "recommended_module": "Applied Machine Learning & Statistical Modeling"
+  },
+  {
+    "id": "sk_deep_learning",
+    "name": "Deep Learning & PyTorch/TF",
+    "category": "AI & Data Science",
+    "aliases": ["deep learning", "pytorch", "tensorflow", "neural networks", "cnn", "transformer"],
+    "importance_weight": 0.85,
+    "recommended_module": "Deep Learning Architectures with PyTorch"
+  },
+  {
+    "id": "sk_llm_genai",
+    "name": "Generative AI & LLMs",
+    "category": "AI & Data Science",
+    "aliases": ["generative ai", "genai", "llm", "llms", "langchain", "prompt engineering", "rag", "gemini", "openai"],
+    "importance_weight": 0.95,
+    "recommended_module": "Generative AI Engineering: RAG, LangChain & Foundation Models"
+  },
+  {
+    "id": "sk_linux",
+    "name": "Linux & Shell Scripting",
+    "category": "Developer Tools",
+    "aliases": ["linux", "bash", "shell scripting", "unix", "posix"],
+    "importance_weight": 0.8,
+    "recommended_module": "Linux Systems Administration & Bash Automation"
+  }
+]

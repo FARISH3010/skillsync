@@ -1,0 +1,82 @@
+[
+  {
+    "id": "job_01",
+    "title": "Full Stack Developer (React / Node / Cloud)",
+    "company": "TechCorp India (Bengaluru)",
+    "location": "Bengaluru, India",
+    "experience": "1-3 years",
+    "description": "Looking for a Full Stack Developer proficient in React.js, TypeScript, Next.js, Node.js, Express, and PostgreSQL. Hands-on experience with Docker, AWS (ECS, S3), CI/CD pipelines, and Redis caching. Strong knowledge of RESTful APIs, Git, and Microservices architecture required."
+  },
+  {
+    "id": "job_02",
+    "title": "Junior Full Stack Software Engineer",
+    "company": "Fintech Solutions (Hyderabad)",
+    "location": "Hyderabad, India",
+    "experience": "0-2 years",
+    "description": "We are seeking a versatile developer skilled in JavaScript/TypeScript, React, Tailwind CSS, Python/FastAPI, and PostgreSQL. Familiarity with Docker, Git, REST APIs, and automated unit testing (Jest/Pytest). Experience with Kafka or message queues is a bonus."
+  },
+  {
+    "id": "job_03",
+    "title": "Frontend & Fullstack Engineer",
+    "company": "E-Commerce Startup (Pune)",
+    "location": "Pune, India",
+    "experience": "1-4 years",
+    "description": "Responsibilities include designing scalable web apps using Next.js, React, Tailwind CSS, TypeScript, and Node.js. State management via Redux Toolkit or Zustand. Cloud deployment via AWS, Docker containerization, GraphQL & REST APIs, and CI/CD automation."
+  },
+  {
+    "id": "job_04",
+    "title": "Associate Software Engineer - Web Platform",
+    "company": "Global IT Services (Chennai)",
+    "location": "Chennai, India",
+    "experience": "0-2 years",
+    "description": "Must have strong fundamentals in Data Structures, SQL, JavaScript, React.js, and Java/Spring Boot or Node.js. Knowledge of Docker containers, Kubernetes basics, Git, Linux, and Cloud deployment on AWS or Azure."
+  },
+  {
+    "id": "job_05",
+    "title": "Full Stack Engineer (MERN / Python)",
+    "company": "Innovate Labs (Gurugram)",
+    "location": "Gurugram, India",
+    "experience": "1-3 years",
+    "description": "Develop full-stack web products. Core stack: React, TypeScript, FastAPI/Node.js, MongoDB/PostgreSQL. Mandatory skills: Docker, CI/CD, Redis, Microservices, RESTful APIs, System Design, Git."
+  },
+  {
+    "id": "job_06",
+    "title": "Cloud & DevOps Engineer",
+    "company": "CloudNative Systems (Noida)",
+    "location": "Noida, India",
+    "experience": "1-3 years",
+    "description": "Seeking DevOps engineers with strong experience in Docker, Kubernetes, CI/CD automation pipelines with GitHub Actions, Linux administration, and AWS cloud services (EKS, EC2, S3, IAM). Python or Bash scripting is essential. Experience with microservices infrastructure monitoring."
+  },
+  {
+    "id": "job_07",
+    "title": "AI & GenAI Solutions Engineer",
+    "company": "Cognitive AI Studio (Bengaluru)",
+    "location": "Bengaluru, India",
+    "experience": "1-4 years",
+    "description": "Build intelligent LLM applications, RAG pipelines, and agentic workflows. Requirements: Python, Generative AI (LLMs, LangChain, Gemini, OpenAI APIs), PyTorch/Deep Learning, and Scikit-Learn. Integration with FastAPI, Redis, Docker, and PostgreSQL vector stores."
+  },
+  {
+    "id": "job_08",
+    "title": "Data Engineer / Platform Specialist",
+    "company": "Enterprise DataWorks (Mumbai)",
+    "location": "Mumbai, India",
+    "experience": "2-4 years",
+    "description": "Build high-throughput data processing pipelines. Key skills: Python, PostgreSQL, SQL optimization, Apache Kafka event streaming, Docker, Linux, and Cloud deployment on AWS. Exposure to microservices architecture, data structures, and Git version control."
+  },
+  {
+    "id": "job_09",
+    "title": "Backend Microservices Engineer",
+    "company": "RazorFin Payments (Bengaluru)",
+    "location": "Bengaluru, India",
+    "experience": "1-3 years",
+    "description": "Design mission-critical payment services. Core stack: Java, Spring Boot, Python, PostgreSQL, Redis caching, Kafka message streaming, GraphQL APIs, and Docker. Experience with Unit testing (JUnit/Pytest), CI/CD, and distributed system design."
+  },
+  {
+    "id": "job_10",
+    "title": "Junior AI & Data Science Associate",
+    "company": "NextGen Analytics (Hyderabad)",
+    "location": "Hyderabad, India",
+    "experience": "0-2 years",
+    "description": "Looking for fresh graduates or junior analysts with strong skills in Python, Machine Learning (Scikit-Learn), Deep Learning (PyTorch/TensorFlow), SQL databases, and Data Structures. Familiarity with Git, Linux, Docker, and Generative AI concepts."
+  }
+]

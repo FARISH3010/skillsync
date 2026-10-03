@@ -1,0 +1,28 @@
+{
+  "id": "curr_cs_2024",
+  "curriculum_title": "B.Tech Computer Science and Engineering (Standard Core Track)",
+  "institution": "National Institute of Engineering & Technology",
+  "academic_year": "2024-2025",
+  "courses": [
+    {
+      "code": "CS301",
+      "name": "Data Structures and Algorithms",
+      "description": "Arrays, Linked Lists, Stacks, Queues, Binary Trees, Graphs, Sorting algorithms, Big O notation, Dynamic Programming in C++."
+    },
+    {
+      "code": "CS302",
+      "name": "Database Management Systems",
+      "description": "Relational algebra, SQL, Normalization (1NF, 2NF, 3NF, BCNF), ER modeling, Transactions, ACID properties, indexing using PostgreSQL/MySQL."
+    },
+    {
+      "code": "CS303",
+      "name": "Object Oriented Programming & Software Engineering",
+      "description": "Object-oriented principles (OOP), Java, Design patterns, Waterfall & Agile methodologies, Unit testing with JUnit, Git version control basics."
+    },
+    {
+      "code": "CS304",
+      "name": "Web Technologies & Computer Networks",
+      "description": "HTML5, CSS3, JavaScript ES6 basics, DOM manipulation, HTTP/HTTPS protocols, TCP/IP, RESTful APIs, basic Node.js and Express backend setup."
+    }
+  ]
+}

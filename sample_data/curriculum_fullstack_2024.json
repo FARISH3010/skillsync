@@ -1,0 +1,28 @@
+{
+  "id": "curr_fullstack_2024",
+  "curriculum_title": "B.Tech Full Stack Web & Cloud Engineering",
+  "institution": "Global Tech University",
+  "academic_year": "2024-2025",
+  "courses": [
+    {
+      "code": "FS101",
+      "name": "Modern Frontend Development with React & TypeScript",
+      "description": "HTML5, modern JavaScript ES6+, TypeScript static typing, React components, hooks, Tailwind CSS styling, responsive layout design."
+    },
+    {
+      "code": "FS201",
+      "name": "Backend REST APIs with Node.js & Express",
+      "description": "Node.js runtime, Express web framework, RESTful API design, middleware, PostgreSQL database integration with SQL queries."
+    },
+    {
+      "code": "FS301",
+      "name": "Software Engineering & Git Version Control",
+      "description": "Version control with Git and GitHub, unit testing with Jest, software design patterns, and agile sprint methodologies."
+    },
+    {
+      "code": "FS401",
+      "name": "Next.js Fullstack Architecture",
+      "description": "Server-side rendering, Next.js page router and app router, client-server communication, authentication basics."
+    }
+  ]
+}
