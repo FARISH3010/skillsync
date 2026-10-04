@@ -62,7 +62,7 @@ export function exportReportToCSV(data) {
 }
 
 /**
- * Triggers browser print-to-PDF with a dedicated printable styled curriculum layout
+ * Triggers browser print-to-PDF with a modern Pink & Orange Bento printable layout
  */
 export function exportReportToPDF(data) {
   if (!data) return;
@@ -80,161 +80,261 @@ export function exportReportToPDF(data) {
 
   const html = `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>SkillSync Academic Planning Proposal - ${curriculum.title || 'Report'}</title>
+  <meta charset="utf-8"/>
+  <title>SkillSync Curriculum Intelligence Report - ${curriculum.title || 'Executive Dossier'}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 40px;
-      color: #0f172a;
-      background: #ffffff;
-      line-height: 1.5;
+    @page {
+      margin: 12mm 15mm;
+      size: A4 portrait;
     }
-    .header {
-      border-bottom: 3px solid #4f46e5;
-      padding-bottom: 20px;
-      margin-bottom: 30px;
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 24px;
+      color: #1c1917;
+      background: #FFFFFF;
+      line-height: 1.5;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .header-banner {
+      border: 1px solid #fcd0db;
+      border-radius: 16px;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #ffffff 0%, #fff5f7 50%, #ffffff 100%);
+      margin-bottom: 24px;
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(244, 63, 94, 0.06);
     }
-    .title {
-      font-size: 26px;
+    .brand-title {
+      font-size: 22px;
       font-weight: 800;
-      color: #1e1b4b;
+      color: #0c0a09;
+      letter-spacing: -0.02em;
       margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .subtitle {
-      font-size: 13px;
-      color: #64748b;
-      margin-top: 5px;
+    .brand-title span {
+      color: #e11d48;
     }
-    .badge {
-      background: #e0e7ff;
-      color: #4338ca;
+    .badge-pro {
+      background: #ffe4e6;
+      color: #be123c;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #fecdd3;
+    }
+    .doc-meta {
       font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 9999px;
+      color: #78716c;
+      margin-top: 4px;
+    }
+    .tag-ribbon {
       display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #ea580c;
+      background: #ffedd5;
+      border: 1px solid #fed7aa;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      margin-bottom: 6px;
+    }
+    .h1-title {
+      font-family: 'Newsreader', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #0c0a09;
+      margin: 4px 0 6px 0;
+      line-height: 1.25;
     }
     .metrics-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin-bottom: 30px;
+      gap: 12px;
+      margin-bottom: 24px;
     }
-    .card {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 16px;
+    .bento-card {
+      background: #ffffff;
+      border: 1px solid #fcd0db;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 4px rgba(244, 114, 182, 0.06);
     }
-    .card-label {
-      font-size: 11px;
+    .bento-label {
+      font-size: 10px;
       font-weight: 700;
-      color: #64748b;
+      color: #881337;
       text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
-    .card-val {
-      font-size: 24px;
+    .bento-val {
+      font-size: 26px;
       font-weight: 800;
-      color: #0f172a;
+      color: #0c0a09;
+      margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+      font-family: 'Hanken Grotesk', sans-serif;
+    }
+    .bento-val.rose { color: #e11d48; }
+    .bento-val.orange { color: #ea580c; }
+    .bento-val.emerald { color: #059669; }
+    .bento-desc {
+      font-size: 10px;
+      color: #78716c;
       margin-top: 4px;
     }
-    h2 {
-      font-size: 18px;
+    .section-title {
+      font-size: 14px;
       font-weight: 700;
-      border-bottom: 1px solid #cbd5e1;
-      padding-bottom: 8px;
-      margin-top: 30px;
-      margin-bottom: 15px;
-      color: #1e293b;
+      color: #0c0a09;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: #e11d48;
     }
     table {
       width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 25px;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-bottom: 24px;
+      border: 1px solid #fcd0db;
+      border-radius: 12px;
+      overflow: hidden;
       font-size: 12px;
     }
     th {
-      background: #f1f5f9;
+      background: #fff5f7;
       text-align: left;
-      padding: 10px;
+      padding: 10px 14px;
       font-weight: 700;
-      color: #475569;
-      border-bottom: 2px solid #cbd5e1;
+      color: #881337;
+      border-bottom: 1px solid #fcd0db;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
     td {
-      padding: 10px;
-      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 14px;
+      border-bottom: 1px solid #fce7f3;
+      color: #1c1917;
     }
-    .priority-high {
-      background: #fee2e2;
-      color: #991b1b;
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:nth-child(even) td {
+      background: #fffbfd;
+    }
+    .badge-pill {
+      font-size: 10px;
       font-weight: 700;
       padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 10px;
+      border-radius: 9999px;
+      display: inline-block;
     }
-    .priority-med {
-      background: #fef3c7;
-      color: #92400e;
+    .badge-critical {
+      background: #ffe4e6;
+      color: #be123c;
+      border: 1px solid #fecdd3;
+    }
+    .badge-covered {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    .badge-warning {
+      background: #ffedd5;
+      color: #9a3412;
+      border: 1px solid #fed7aa;
+    }
+    .badge-lift {
+      background: #fff0f3;
+      color: #e11d48;
+      font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 10px;
+      border: 1px solid #fcd0db;
     }
     .footer {
-      margin-top: 40px;
-      padding-top: 15px;
-      border-top: 1px solid #e2e8f0;
+      margin-top: 36px;
+      padding-top: 14px;
+      border-top: 1px solid #fcd0db;
       font-size: 11px;
-      color: #94a3b8;
+      color: #78716c;
       display: flex;
       justify-content: space-between;
-    }
-    @media print {
-      body { margin: 15mm 20mm; }
+      align-items: center;
     }
   </style>
 </head>
 <body>
-  <div class="header">
+  <div class="header-banner">
     <div>
-      <span class="badge">CURRICULUM INTELLIGENCE OVERHAUL PROPOSAL</span>
-      <h1 class="title">${curriculum.title || 'Curriculum Overhaul Proposal'}</h1>
-      <div class="subtitle">
-        Institution: <strong>${curriculum.institution || 'N/A'}</strong> • Academic Year: <strong>${curriculum.academic_year || '2024-2025'}</strong>
+      <div class="brand-title">Skill<span>Sync</span> <span class="badge-pro">PRO</span></div>
+      <div class="doc-meta">
+        Executive Telemetry Dossier &bull; Institution: <strong>${curriculum.institution || 'Academic Council'}</strong>
+      </div>
+      <div class="doc-meta">
+        Curriculum: <strong>${curriculum.title || 'Academic Plan'}</strong> (${curriculum.academic_year || '2024-2025'})
       </div>
     </div>
     <div style="text-align: right;">
-      <div style="font-size: 18px; font-weight: 900; color: #4f46e5;">SkillSync AI</div>
-      <div style="font-size: 11px; color: #64748b;">Generated: ${new Date().toLocaleDateString()}</div>
+      <span class="tag-ribbon">Labor Alignment Audit</span>
+      <div style="font-size: 11px; color: #78716c; font-family: 'JetBrains Mono', monospace;">
+        Generated: ${new Date().toLocaleDateString()}
+      </div>
     </div>
   </div>
 
   <div class="metrics-grid">
-    <div class="card">
-      <div class="card-label">Curriculum Coverage</div>
-      <div class="card-val" style="color: #4f46e5;">${summary.overall_coverage_pct}%</div>
+    <div class="bento-card">
+      <div class="bento-label">Curriculum Fit</div>
+      <div class="bento-val rose">${summary.overall_coverage_pct}%</div>
+      <div class="bento-desc">Baseline vs Market</div>
     </div>
-    <div class="card">
-      <div class="card-label">Critical Gaps</div>
-      <div class="card-val" style="color: #dc2626;">${summary.critical_gaps_count}</div>
+    <div class="bento-card">
+      <div class="bento-label">Critical Gaps</div>
+      <div class="bento-val orange">${summary.critical_gaps_count}</div>
+      <div class="bento-desc">&ge;60% employer frequency</div>
     </div>
-    <div class="card">
-      <div class="card-label">Moderate Gaps</div>
-      <div class="card-val" style="color: #d97706;">${summary.moderate_gaps_count}</div>
+    <div class="bento-card">
+      <div class="bento-label">Tracked Roles</div>
+      <div class="bento-val">${summary.total_industry_jobs_analyzed}</div>
+      <div class="bento-desc">Verified postings benchmark</div>
     </div>
-    <div class="card">
-      <div class="card-label">Industry Benchmark</div>
-      <div class="card-val">${summary.total_industry_jobs_analyzed} Live Postings</div>
+    <div class="bento-card">
+      <div class="bento-label">Total Skills Tracked</div>
+      <div class="bento-val emerald">${summary.total_skills_tracked}</div>
+      <div class="bento-desc">Cross-referenced competencies</div>
     </div>
   </div>
 
-  <h2>1. Priority Skill Gaps in Current Curriculum</h2>
+  <div class="section-title">
+    <span class="section-dot"></span>
+    <span>1. Priority Curricular Skill Gaps & Alignment Matrix</span>
+  </div>
   <table>
     <thead>
       <tr>
@@ -242,56 +342,78 @@ export function exportReportToPDF(data) {
         <th>Category</th>
         <th>Market Demand</th>
         <th>Curriculum Status</th>
-        <th>Gap Priority</th>
+        <th>Action Priority</th>
       </tr>
     </thead>
     <tbody>
-      ${(data.skills || []).slice(0, 14).map(s => `
+      ${(data.skills || []).slice(0, 15).map(s => `
         <tr>
-          <td><strong>${s.name}</strong></td>
-          <td>${s.category}</td>
-          <td>${s.market_frequency_pct}%</td>
-          <td>${s.is_covered ? '<span style="color:#059669;">Covered</span>' : '<span style="color:#dc2626; font-weight:bold;">Missing</span>'}</td>
           <td>
-            ${s.priority === 'HIGH' ? '<span class="priority-high">HIGH GAP</span>' : s.priority === 'MEDIUM' ? '<span class="priority-med">MEDIUM</span>' : '<span style="color:#64748b;">Adequate</span>'}
+            <strong>${s.name}</strong>
+            <div style="font-size: 10px; color: #78716c;">${s.recommended_module || 'Standard Module'}</div>
+          </td>
+          <td><span style="font-size: 11px; color: #78716c;">${s.category}</span></td>
+          <td><strong style="font-family: 'JetBrains Mono', monospace;">${s.market_frequency_pct}%</strong></td>
+          <td>
+            ${s.is_covered 
+              ? '<span class="badge-pill badge-covered">Covered</span>' 
+              : '<span class="badge-pill badge-critical">Missing Gap</span>'
+            }
+          </td>
+          <td>
+            ${s.priority === 'HIGH' 
+              ? '<span class="badge-pill badge-critical">HIGH PRIORITY</span>' 
+              : s.priority === 'MEDIUM' 
+              ? '<span class="badge-pill badge-warning">MEDIUM</span>' 
+              : '<span class="badge-pill" style="background:#f5f5f4; color:#78716c;">ADEQUATE</span>'
+            }
           </td>
         </tr>
       `).join('')}
     </tbody>
   </table>
 
-  <h2>2. Recommended Curriculum Interventions & Elective Modules</h2>
+  <div class="section-title">
+    <span class="section-dot" style="background:#ea580c;"></span>
+    <span>2. Algorithmic Interventions & Recommended Course Modules</span>
+  </div>
   <table>
     <thead>
       <tr>
         <th>Target Skill</th>
         <th>Category</th>
-        <th>Recommended Action / Course Module</th>
-        <th>Impact Gain</th>
+        <th>Recommended Action / Course Intervention</th>
+        <th>Priority</th>
+        <th>Projected Lift</th>
       </tr>
     </thead>
     <tbody>
       ${recs.map(r => `
         <tr>
           <td><strong>${r.skill_name}</strong></td>
-          <td>${r.category}</td>
+          <td><span style="font-size: 11px; color: #78716c;">${r.category}</span></td>
           <td>${r.recommended_action}</td>
-          <td style="color:#4f46e5; font-weight:bold;">+${r.impact_gain_pct}%</td>
+          <td>
+            <span class="badge-pill ${r.priority === 'HIGH' ? 'badge-critical' : 'badge-warning'}">
+              ${r.priority}
+            </span>
+          </td>
+          <td><span class="badge-pill badge-lift">+${r.impact_gain_pct}% Lift</span></td>
         </tr>
       `).join('')}
     </tbody>
   </table>
 
   <div class="footer">
-    <div>SkillSync Platform &bull; Automated NLP & Taxonomy Intelligence</div>
-    <div>CONFIDENTIAL &bull; FOR ACADEMIC PLANNING COUNCIL REVIEW</div>
+    <div><strong>SkillSync Curriculum Intelligence Engine</strong> &bull; Autonomous Curriculum Harmonization</div>
+    <div style="font-family: 'JetBrains Mono', monospace;">CONFIDENTIAL &bull; FOR ACADEMIC SENATE REVIEW</div>
   </div>
 
   <script>
     window.onload = function() {
       setTimeout(function() {
         window.print();
-      }, 500);
+      }, 400);
     }
   </script>
 </body>

@@ -1,13 +1,9 @@
 import React from 'react';
 import { 
   Briefcase, 
-  TrendingUp, 
   MapPin, 
   Building2, 
-  Layers, 
-  CheckCircle2, 
-  Flame,
-  ArrowUpRight
+  Flame
 } from 'lucide-react';
 
 export default function IndustryView({ jobsData, dashboardData }) {
@@ -22,87 +18,86 @@ export default function IndustryView({ jobsData, dashboardData }) {
   const marketRoles = dashboardData?.market_roles || [];
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6">
       {/* Industry Overview Banner */}
-      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800 relative overflow-hidden shadow-2xl">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-3">
-              <TrendingUp className="w-3.5 h-3.5" />
-              Live Hiring Demand & Placement Intelligence
+      <div className="bg-white border border-rose-200 rounded-2xl p-6 shadow-pink-card flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div>
+          <span className="badge-info text-xs mb-2">
+            Hiring Intelligence
+          </span>
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-stone-900 font-['Hanken_Grotesk']">
+            {domainName} Market Demand &amp; Placement Readiness
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-600 mt-1.5 max-w-2xl leading-relaxed">
+            Real-time hiring telemetry synthesized from {jobsData.length} verified company requisitions across active tech employers in {domainName}.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 shrink-0">
+          <div className="bg-[#FFF5F7] border border-rose-200 p-4 rounded-xl shadow-xs">
+            <span className="text-[11px] uppercase tracking-wider text-rose-800 font-bold block">
+              Top Demanded
+            </span>
+            <div className="text-sm font-bold text-stone-900 mt-1 truncate max-w-[130px]" title={sortedSkills[0]?.name}>
+              {sortedSkills[0]?.name || 'Domain Skill'}
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
-              {domainName} Market Demand & Placement Readiness
-            </h2>
-            <p className="text-sm text-slate-300 mt-2 max-w-2xl leading-relaxed">
-              Real-time analysis synthesized from {jobsData.length} verified hiring profiles across active firms and modern employers in {domainName}.
-            </p>
+            <span className="text-xs text-rose-600 font-mono font-bold">
+              {sortedSkills[0]?.market_frequency_pct || 85}% Frequency
+            </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 shrink-0">
-            <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
-              <span className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold block">
-                Top Demanded
-              </span>
-              <div className="text-base sm:text-lg font-bold text-white font-display mt-1 truncate max-w-[140px]" title={sortedSkills[0]?.name}>
-                {sortedSkills[0]?.name || 'Domain Competency'}
-              </div>
-              <span className="text-xs text-indigo-400 font-mono">
-                {sortedSkills[0]?.market_frequency_pct || 85}% Frequency
-              </span>
+          <div className="bg-[#FFF5F7] border border-rose-200 p-4 rounded-xl shadow-xs">
+            <span className="text-[11px] uppercase tracking-wider text-stone-600 font-bold block">
+              Tracked Roles
+            </span>
+            <div className="text-sm font-bold text-stone-900 mt-1">
+              {marketRoles.length > 0 ? `${marketRoles.length} Active Tracks` : '5 Key Roles'}
             </div>
-
-            <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
-              <span className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold block">
-                Target Roles
-              </span>
-              <div className="text-base sm:text-lg font-bold text-white font-display mt-1">
-                {marketRoles.length > 0 ? `${marketRoles.length} Active Tracks` : '5 Key Roles'}
-              </div>
-              <span className="text-xs text-emerald-400 font-mono">
-                Verified Benchmark
-              </span>
-            </div>
+            <span className="text-xs text-orange-600 font-bold">
+              Verified Benchmark
+            </span>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Top Demanded Industry Skills Leaderboard */}
-        <div className="glass-panel p-6 rounded-3xl border border-slate-800">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-white font-display flex items-center gap-2">
-              <Flame className="w-5 h-5 text-amber-400" />
-              Top Demanded Competencies
+        <div className="bg-white border border-rose-200 rounded-2xl p-6 shadow-pink-card space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-stone-900 flex items-center gap-2">
+              <Flame className="w-4 h-4 text-orange-500" />
+              Demanded Competencies
             </h3>
-            <span className="text-xs text-slate-400 font-medium">Ranked by hiring demand</span>
+            <span className="text-xs text-stone-500">By frequency</span>
           </div>
 
-          <div className="space-y-3.5 max-h-[600px] overflow-y-auto pr-1">
+          <div className="space-y-2.5 max-h-[520px] overflow-y-auto pr-1">
             {sortedSkills.slice(0, 15).map((skill, rank) => (
               <div 
                 key={skill.skill_id}
-                className="p-3.5 rounded-2xl bg-slate-850/60 border border-slate-700/50 flex items-center justify-between"
+                className="p-3.5 rounded-xl bg-gradient-to-r from-[#FFF5F7] to-white border border-rose-200/90 flex items-center justify-between hover:border-rose-300 transition-colors"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold font-mono ${
-                    rank < 3 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-slate-800 text-slate-400'
+                    rank < 3 
+                      ? 'bg-gradient-to-tr from-rose-500 to-orange-500 text-white shadow-xs' 
+                      : 'bg-rose-100 text-rose-800'
                   }`}>
                     {rank + 1}
                   </span>
                   <div>
-                    <h4 className="text-sm font-bold text-slate-200">{skill.name}</h4>
-                    <span className="text-[11px] text-slate-400">{skill.category}</span>
+                    <h4 className="text-xs font-bold text-stone-900">{skill.name}</h4>
+                    <span className="text-[11px] text-stone-500">{skill.category}</span>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <span className="text-sm font-extrabold text-indigo-400 font-mono">
+                  <span className="text-xs font-bold text-rose-700 font-mono">
                     {skill.market_frequency_pct}%
                   </span>
-                  <div className="w-16 bg-slate-800 h-1.5 rounded-full mt-1 overflow-hidden">
+                  <div className="w-16 bg-rose-100 h-1.5 rounded-full mt-1 overflow-hidden">
                     <div 
-                      className="bg-indigo-500 h-full rounded-full" 
+                      className="bg-gradient-to-r from-rose-500 to-orange-500 h-full rounded-full" 
                       style={{ width: `${skill.market_frequency_pct}%` }} 
                     />
                   </div>
@@ -113,56 +108,56 @@ export default function IndustryView({ jobsData, dashboardData }) {
         </div>
 
         {/* Live Job Postings List */}
-        <div className="lg:col-span-2 glass-panel p-6 rounded-3xl border border-slate-800">
-          <div className="flex items-center justify-between mb-4">
+        <div className="lg:col-span-2 bg-white border border-rose-200 rounded-2xl p-6 shadow-pink-card space-y-4">
+          <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-bold text-white font-display flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-indigo-400" />
-                Active Job Profiles & Demanded Skills
+              <h3 className="text-base font-bold text-stone-900 flex items-center gap-2">
+                <Briefcase className="w-4 h-4 text-orange-500" />
+                Industry Requisitions &amp; Demanded Skills
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Representative industry hiring requisitions in {domainName}
+              <p className="text-xs text-stone-500 mt-0.5">
+                Representative hiring profiles in {domainName}
               </p>
             </div>
-            <span className="text-xs font-semibold text-slate-400 bg-slate-800 px-3 py-1 rounded-lg">
+            <span className="badge-info text-xs">
               {jobsData.length} Profiles
             </span>
           </div>
 
-          <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1">
+          <div className="space-y-3.5 max-h-[520px] overflow-y-auto pr-1">
             {jobsData.map((job) => (
               <div 
                 key={job.id}
-                className="p-5 rounded-2xl bg-slate-850/60 border border-slate-700/60 hover:border-indigo-500/40 transition"
+                className="p-5 rounded-2xl bg-gradient-to-b from-[#FFF5F7] to-white border border-rose-200/90 hover:border-rose-400 transition-all shadow-xs"
               >
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                   <div>
-                    <h4 className="text-base font-bold text-white font-display">{job.title}</h4>
-                    <p className="text-xs text-slate-400 flex items-center gap-2 mt-1">
-                      <Building2 className="w-3.5 h-3.5 text-slate-400" /> 
-                      <span className="text-slate-300 font-medium">{job.company}</span>
+                    <h4 className="text-sm font-bold text-stone-900">{job.title}</h4>
+                    <p className="text-xs text-stone-500 flex items-center gap-2 mt-0.5">
+                      <Building2 className="w-3.5 h-3.5 text-rose-400" /> 
+                      <span className="text-stone-800 font-semibold">{job.company}</span>
                       <span>•</span>
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" /> 
+                      <MapPin className="w-3.5 h-3.5 text-rose-400" /> 
                       <span>{job.location}</span>
                       <span>•</span>
-                      <span className="text-slate-400 font-mono text-[11px]">Exp: {job.experience}</span>
+                      <span className="font-mono text-[11px] font-medium text-stone-600">Exp: {job.experience}</span>
                     </p>
                   </div>
                 </div>
 
-                <p className="text-xs text-slate-300 my-3 leading-relaxed">
+                <p className="text-xs text-stone-600 my-2.5 leading-relaxed">
                   {job.description}
                 </p>
 
-                <div className="pt-3 border-t border-slate-800/80">
-                  <span className="text-[11px] uppercase tracking-wider font-semibold text-slate-400 block mb-2">
-                    NLP Extracted Skill Requirements:
+                <div className="pt-3 border-t border-rose-100">
+                  <span className="text-[11px] font-bold text-rose-800/80 block mb-1.5 uppercase tracking-wide">
+                    Extracted Requirements:
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {job.extracted_skills.map((s, idx) => (
                       <span 
-                        key={idx}
-                        className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500/10 border border-emerald-500/25 text-emerald-300"
+                        key={idx} 
+                        className="px-2.5 py-0.5 rounded-full text-xs bg-white border border-rose-200 text-stone-700 font-medium"
                       >
                         {s.skill_name}
                       </span>
@@ -177,3 +172,4 @@ export default function IndustryView({ jobsData, dashboardData }) {
     </div>
   );
 }
+
