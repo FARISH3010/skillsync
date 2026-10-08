@@ -125,6 +125,7 @@ def seed_sample_jobs(db: Session, extractor: SkillExtractor):
         
         for j in jobs_data:
             existing = db.query(JobPosting).filter(JobPosting.id == j["id"]).first()
+            resp_str = json.dumps(j.get("responsibilities", []))
             if not existing:
                 job = JobPosting(
                     id=j["id"],
@@ -132,7 +133,8 @@ def seed_sample_jobs(db: Session, extractor: SkillExtractor):
                     company=j["company"],
                     location=j["location"],
                     experience=j["experience"],
-                    description=j["description"]
+                    description=j["description"],
+                    responsibilities=resp_str
                 )
                 db.add(job)
                 
@@ -146,6 +148,9 @@ def seed_sample_jobs(db: Session, extractor: SkillExtractor):
                         matched_mention=ext["matched_mention"]
                     )
                     db.add(db_ext)
+            else:
+                existing.responsibilities = resp_str
+                existing.description = j["description"]
         db.commit()
 
 # Startup event: Initialize database and seed MVP data
@@ -388,6 +393,32 @@ def get_dashboard_gaps(curriculum_id: str = "curr_cs_2024", db: Session = Depend
         curriculum_skills=curriculum_skills,
         job_postings_extractions=job_extractions
     )
+    analysis["portfolio_projects"] = [
+        {
+            "title": "Cloud-Native Microservices E-Commerce Platform",
+            "skills": ["Docker & Containerization", "Kubernetes", "Redis & Caching", "PostgreSQL"],
+            "description": "Build an asynchronous checkout pipeline deployed with Docker & Kubernetes, using Redis caching and PostgreSQL ACID transactions.",
+            "difficulty": "Advanced",
+            "portfolioImpact": "High",
+            "bridged_gap_summary": "Bridges Containerization, Cloud Deployment, and In-Memory Caching demands"
+        },
+        {
+            "title": "Full-Stack AI Knowledge Assistant (RAG Engine)",
+            "skills": ["Generative AI & LLMs", "FastAPI / Python", "Next.js", "Docker"],
+            "description": "Implement a hybrid document question-answering app using Gemini/OpenAI API, vector embeddings, and Next.js frontend.",
+            "difficulty": "Intermediate",
+            "portfolioImpact": "Very High",
+            "bridged_gap_summary": "Directly bridges Generative AI, Vector Search, and Modern Full-Stack API demands"
+        },
+        {
+            "title": "Real-Time Event-Driven Streaming Pipeline",
+            "skills": ["Kafka & Event Streaming", "Node.js & Express", "CI/CD Automation", "PostgreSQL"],
+            "description": "Architect a scalable pub/sub event pipeline with Apache Kafka, automated GitHub Actions CI/CD, and integration test suites.",
+            "difficulty": "Intermediate",
+            "portfolioImpact": "High",
+            "bridged_gap_summary": "Bridges Event-Driven Architecture, Pub/Sub Queues, and Production CI/CD pipelines"
+        }
+    ]
     analysis["curriculum"] = {
         "id": curr.id,
         "title": curr.title,
@@ -506,6 +537,9 @@ def get_job_postings(curriculum_id: Optional[str] = None, db: Session = Depends(
                             "category": domain_bench.get("domain_name", "Professional Practice"),
                             "matched_mention": sk_name
                         })
+                    resp_list = sj.get("responsibilities", [])
+                    if not resp_list and sj.get("description"):
+                        resp_list = [sj.get("description")]
                     results.append({
                         "id": f"job_dyn_{idx+1}",
                         "title": sj.get("title", "Associate Professional"),
@@ -513,6 +547,7 @@ def get_job_postings(curriculum_id: Optional[str] = None, db: Session = Depends(
                         "location": sj.get("location", "National / Hybrid"),
                         "experience": sj.get("experience", "0-2 Yrs"),
                         "description": sj.get("description", "Responsible for day-to-day legal or analytical operations."),
+                        "responsibilities": resp_list,
                         "extracted_skills": skills_list
                     })
                 return results
@@ -534,6 +569,14 @@ def get_job_postings(curriculum_id: Optional[str] = None, db: Session = Depends(
             }
             for ext, tax in extracted
         ]
+        
+        resp_list = []
+        if j.responsibilities:
+            try:
+                resp_list = json.loads(j.responsibilities)
+            except Exception:
+                resp_list = [r.strip() for r in j.responsibilities.split("\n") if r.strip()]
+
         results.append({
             "id": j.id,
             "title": j.title,
@@ -541,6 +584,7 @@ def get_job_postings(curriculum_id: Optional[str] = None, db: Session = Depends(
             "location": j.location,
             "experience": j.experience,
             "description": j.description,
+            "responsibilities": resp_list,
             "extracted_skills": skills
         })
     return results
@@ -652,7 +696,8 @@ def simulate_what_if(req: SimulationRequest, db: Session = Depends(get_db)):
             "category_breakdown": cat_breakdown,
             "skills": formatted_skills,
             "recommendations": recommendations_list,
-            "market_roles": roles
+            "market_roles": roles,
+            "portfolio_projects": domain_bench.get("portfolio_projects", [])
         }
 
     simulation_result = AnalyticsEngine.compute_gap_analysis(
@@ -661,6 +706,35 @@ def simulate_what_if(req: SimulationRequest, db: Session = Depends(get_db)):
         job_postings_extractions=job_extractions,
         simulated_additional_skills=req.simulated_skill_ids
     )
+
+    # Attach CS domain project recommendations if needed
+    cs_default_projects = [
+        {
+            "title": "Cloud-Native Microservices E-Commerce Platform",
+            "skills": ["Docker & Containerization", "Kubernetes", "Redis & Caching", "PostgreSQL"],
+            "description": "Build an asynchronous checkout pipeline deployed with Docker & Kubernetes, using Redis caching and PostgreSQL ACID transactions.",
+            "difficulty": "Advanced",
+            "portfolioImpact": "High",
+            "bridged_gap_summary": "Bridges Containerization, Cloud Deployment, and In-Memory Caching demands"
+        },
+        {
+            "title": "Full-Stack AI Knowledge Assistant (RAG Engine)",
+            "skills": ["Generative AI & LLMs", "FastAPI / Python", "Next.js", "Docker"],
+            "description": "Implement a hybrid document question-answering app using Gemini/OpenAI API, vector embeddings, and Next.js frontend.",
+            "difficulty": "Intermediate",
+            "portfolioImpact": "Very High",
+            "bridged_gap_summary": "Directly bridges Generative AI, Vector Search, and Modern Full-Stack API demands"
+        },
+        {
+            "title": "Real-Time Event-Driven Streaming Pipeline",
+            "skills": ["Kafka & Event Streaming", "Node.js & Express", "CI/CD Automation", "PostgreSQL"],
+            "description": "Architect a scalable pub/sub event pipeline with Apache Kafka, automated GitHub Actions CI/CD, and integration test suites.",
+            "difficulty": "Intermediate",
+            "portfolioImpact": "High",
+            "bridged_gap_summary": "Bridges Event-Driven Architecture, Pub/Sub Queues, and Production CI/CD pipelines"
+        }
+    ]
+    simulation_result["portfolio_projects"] = cs_default_projects
 
     return simulation_result
 
@@ -793,3 +867,55 @@ async def upload_curriculum_alias(
     db: Session = Depends(get_db)
 ):
     return await upload_curriculum(file, title, institution, academic_year, db)
+
+
+@app.post("/resume/analyze")
+async def analyze_resume_endpoint(
+    file: UploadFile = File(...),
+    target_job_id: Optional[str] = Form(None),
+    curriculum_id: Optional[str] = Form("curr_cs_2024"),
+    db: Session = Depends(get_db)
+):
+    """
+    Candidate Resume Intelligence Engine:
+    - Ingests PDF/DOCX resume
+    - Evaluates suitability for a specific job (or top matching job)
+    - Recommends all jobs the candidate can apply for
+    - Highlights strengths and specific lacking aspects
+    - Uses curriculum intelligence logic to recommend courses that bridge lacking competencies
+    """
+    content_bytes = await file.read()
+    filename = file.filename or "resume.pdf"
+    resume_text = DocumentParser.parse_document(content_bytes, filename)
+    if not resume_text.strip():
+        raise HTTPException(status_code=400, detail="Could not extract readable text from uploaded resume file.")
+
+    taxonomy_data = get_taxonomy_data(db)
+    extractor = SkillExtractor(taxonomy_data)
+
+    # 1. Fetch all available jobs with their extracted skills
+    all_jobs_data = get_job_postings(curriculum_id=curriculum_id, db=db)
+
+    # 2. Find target job if provided
+    target_job = None
+    if target_job_id:
+        target_job = next((j for j in all_jobs_data if j.get("id") == target_job_id), None)
+
+    # 3. Fetch current curriculum courses
+    courses_response = get_curriculum_skills(curriculum_id=curriculum_id or "curr_cs_2024", db=db)
+    all_courses = courses_response.get("courses", [])
+
+    # 4. Perform comprehensive resume evaluation
+    analysis_result = extractor.analyze_resume(
+        resume_text=resume_text,
+        target_job=target_job,
+        all_jobs=all_jobs_data,
+        all_courses=all_courses
+    )
+
+    return {
+        "success": True,
+        "filename": filename,
+        "analysis": analysis_result
+    }
+

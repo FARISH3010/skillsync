@@ -47,6 +47,7 @@ class JobPosting(Base):
     location = Column(String, nullable=False)
     experience = Column(String, nullable=True)
     description = Column(Text, nullable=False)
+    responsibilities = Column(Text, nullable=True) # JSON array string of bullet points
 
 class ExtractedSkill(Base):
     __tablename__ = "extracted_skills"

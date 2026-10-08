@@ -21,19 +21,23 @@ import {
   Sparkles,
   Zap,
   ChevronDown,
+  ChevronUp,
   ShieldAlert,
   ArrowUpRight,
   Sun,
   Moon,
-  Plus
+  Plus,
+  ExternalLink
 } from 'lucide-react';
 
 import FileUploadModal from './components/FileUploadModal';
+import ResumeUploadModal from './components/ResumeUploadModal';
 import SimulatorView from './components/SimulatorView';
 import StudentView from './components/StudentView';
 import IndustryView from './components/IndustryView';
 import CircularCoverageGauge from './components/CircularCoverageGauge';
 import { exportReportToCSV, exportReportToPDF } from './utils/reportExporter';
+import { getResourcesForCourse } from './utils/courseResources';
 
 const API_BASE = "http://localhost:8000";
 
@@ -58,6 +62,13 @@ export default function App() {
 
   // Upload Modal State
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+
+  // UX Improvement: Curricular Skill Gap & Labor Matrix Dropdown Collapsible state
+  const [isMatrixDropdownOpen, setIsMatrixDropdownOpen] = useState(true);
+
+  // Student checklist completed skills state (reflects directly into matrix & coverage)
+  const [completedSkills, setCompletedSkills] = useState([]);
 
   // What-If Simulator State
   const [simulatedSkills, setSimulatedSkills] = useState([]);
@@ -186,18 +197,16 @@ export default function App() {
     }
   };
 
-  const currentDisplayData = simulationResult || dashboardData;
-  const baselinePct = Number(dashboardData?.summary?.baseline_coverage_pct ?? dashboardData?.summary?.overall_coverage_pct ?? 54.2);
-  const currentCoveragePct = Number(currentDisplayData?.summary?.overall_coverage_pct ?? 54.2);
-  const simulatedGainPct = Number(currentDisplayData?.summary?.simulated_gain_pct ?? (currentCoveragePct - baselinePct).toFixed(1));
-
-  // Category filters for the recommendation / priority heatmap
-  const rawSkills = currentDisplayData?.skills || [];
-  const heatmapCategories = ['ALL', ...Array.from(new Set(rawSkills.map(s => s.category)))];
-  const filteredSkills = rawSkills.filter(s => {
-    if (heatmapCategoryFilter === 'ALL') return true;
-    return s.category === heatmapCategoryFilter;
-  });
+  // Student toggle completed skill handler
+  const handleToggleCompleteSkill = (skillId) => {
+    setCompletedSkills(prev => {
+      if (prev.includes(skillId)) {
+        return prev.filter(id => id !== skillId);
+      } else {
+        return [...prev, skillId];
+      }
+    });
+  };
 
   if (loading && !dashboardData) {
     return (
@@ -273,6 +282,55 @@ export default function App() {
       </div>
     );
   }
+
+  const rawDisplayData = simulationResult || dashboardData;
+  const rawSkillsList = rawDisplayData?.skills || [];
+
+  // Integrate student checklist done skills: mark as covered and recompute coverage
+  const skillsWithChecklist = rawSkillsList.map(skill => {
+    const isCheckedDone = completedSkills.includes(skill.skill_id);
+    const isSim = simulatedSkills.includes(skill.skill_id);
+    const isCovered = skill.is_covered || isCheckedDone || isSim;
+    return {
+      ...skill,
+      is_covered: isCovered,
+      is_student_completed: isCheckedDone,
+      status: isCovered ? "COVERED" : skill.status,
+      gap_score: isCovered ? 0.0 : skill.gap_score
+    };
+  });
+
+  // Calculate dynamic coverage with checklist & simulation additions
+  const totalMarketSkills = skillsWithChecklist.length;
+  const coveredCount = skillsWithChecklist.filter(s => s.is_covered).length;
+  const baselinePct = Number(dashboardData?.summary?.baseline_coverage_pct ?? dashboardData?.summary?.overall_coverage_pct ?? 54.2);
+  const calculatedCoveragePct = totalMarketSkills > 0 
+    ? Number(((coveredCount / totalMarketSkills) * 100).toFixed(1))
+    : Number(rawDisplayData?.summary?.overall_coverage_pct ?? 54.2);
+  const currentCoveragePct = calculatedCoveragePct;
+  const simulatedGainPct = Number((currentCoveragePct - baselinePct).toFixed(1));
+
+  const currentDisplayData = {
+    ...(rawDisplayData || {}),
+    summary: {
+      ...(rawDisplayData?.summary || {}),
+      overall_coverage_pct: currentCoveragePct,
+      baseline_coverage_pct: baselinePct,
+      simulated_gain_pct: Math.max(0, simulatedGainPct),
+      critical_gaps_count: skillsWithChecklist.filter(s => s.status === 'CRITICAL_GAP' && !s.is_covered).length,
+      total_industry_jobs_analyzed: rawDisplayData?.summary?.total_industry_jobs_analyzed || 10,
+      total_skills_tracked: totalMarketSkills || rawDisplayData?.summary?.total_skills_tracked || 30
+    },
+    skills: skillsWithChecklist
+  };
+
+  // Category filters for the recommendation / priority heatmap
+  const rawSkills = skillsWithChecklist;
+  const heatmapCategories = ['ALL', ...Array.from(new Set(rawSkills.map(s => s.category)))];
+  const filteredSkills = rawSkills.filter(s => {
+    if (heatmapCategoryFilter === 'ALL') return true;
+    return s.category === heatmapCategoryFilter;
+  });
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-[#151012] text-[#FDF2F4]' : 'bg-[#FFF0F3] text-stone-800'} flex flex-col font-['Hanken_Grotesk'] transition-colors duration-200 selection:bg-rose-200 selection:text-rose-950`}>
@@ -361,6 +419,16 @@ export default function App() {
             <span>Sync Market</span>
           </button>
 
+          {/* Secondary CTA: Diagnostic Resume Check */}
+          <button
+            onClick={() => setIsResumeModalOpen(true)}
+            className="btn-secondary cursor-pointer text-xs flex items-center gap-1.5 border-rose-200 text-stone-700 hover:bg-rose-50"
+            title="Upload and evaluate candidate resume"
+          >
+            <FileText className="w-3.5 h-3.5 text-rose-600" />
+            <span className="hidden sm:inline">Diagnostic</span> Resume
+          </button>
+
           {/* Primary CTA: Upload Syllabus */}
           <button
             onClick={() => setIsUploadModalOpen(true)}
@@ -373,7 +441,7 @@ export default function App() {
       </header>
 
       {/* 2. SEGMENTED ROLE NAVIGATION BAR */}
-      <div className="max-w-[1720px] mx-auto w-full px-4 sm:px-6 lg:px-8 pt-5 pb-1">
+      <div className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 pt-5 pb-1">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-rose-200/80 pb-4">
           
           {/* Role Navigation Pills */}
@@ -458,7 +526,7 @@ export default function App() {
       </div>
 
       {/* 3. MAIN DASHBOARD VIEWPORT */}
-      <main className="flex-1 max-w-[1720px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 space-y-6">
+      <main className="flex-1 max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 space-y-6">
         
         {/* VIEW 1: ACADEMIC PLANNER */}
         {activeRole === 'faculty' && (
@@ -628,12 +696,15 @@ export default function App() {
                   <div className="lg:col-span-8 flex flex-col gap-4">
                     <div className="bg-white border border-rose-200 rounded-2xl p-5 shadow-pink-card flex flex-col gap-4">
                       
-                      {/* Header Ribbon */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-rose-100">
+                      {/* Header Ribbon / Collapsible Trigger */}
+                      <div 
+                        onClick={() => setIsMatrixDropdownOpen(!isMatrixDropdownOpen)}
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-rose-100 cursor-pointer select-none group"
+                      >
                         <div>
                           <div className="flex items-center gap-2.5">
                             <div className="w-3 h-3 rounded-full bg-rose-500 ring-4 ring-rose-100"></div>
-                            <h2 className="text-lg font-bold text-stone-900 tracking-tight font-['Hanken_Grotesk']">
+                            <h2 className="text-lg font-bold text-stone-900 group-hover:text-rose-700 transition-colors tracking-tight font-['Hanken_Grotesk'] flex items-center gap-2">
                               Curricular Skill Gaps &amp; Labor Alignment Matrix
                             </h2>
                             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FFE8ED] border border-rose-300 text-rose-800 tabular-nums">
@@ -641,12 +712,14 @@ export default function App() {
                             </span>
                           </div>
                           <p className="text-xs text-stone-500 mt-1 pl-5.5">
-                            Real-time cross-referenced telemetry against BLS tech market demands and syllabus coverage.
+                            {isMatrixDropdownOpen 
+                              ? 'Real-time telemetry benchmarking syllabus coverage against live market demands. Click to minimize.' 
+                              : 'Collapsed to streamline view. Click to expand full matrix.'}
                           </p>
                         </div>
 
-                        {/* Export Utility */}
-                        <div className="flex items-center gap-2 self-start sm:self-auto">
+                        {/* Export Utility & Toggle */}
+                        <div className="flex items-center gap-2 self-start sm:self-auto" onClick={(e) => e.stopPropagation()}>
                           <button 
                             onClick={() => exportReportToCSV(currentDisplayData)}
                             className="p-1.5 rounded-xl bg-[#FFF5F7] border border-rose-200 text-stone-600 hover:text-rose-700 hover:bg-rose-100 transition-colors cursor-pointer" 
@@ -654,30 +727,39 @@ export default function App() {
                           >
                             <Download className="w-4 h-4" />
                           </button>
+                          <button 
+                            onClick={() => setIsMatrixDropdownOpen(!isMatrixDropdownOpen)}
+                            className="p-1.5 rounded-xl bg-[#FFF5F7] border border-rose-200 text-stone-600 hover:text-rose-700 transition-colors cursor-pointer"
+                          >
+                            {isMatrixDropdownOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                          </button>
                         </div>
                       </div>
 
-                      {/* Segment Filter Pills */}
-                      <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-semibold">
-                        {heatmapCategories.map(cat => (
-                          <button
-                            key={cat}
-                            onClick={() => setHeatmapCategoryFilter(cat)}
-                            className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1.5 ${
-                              heatmapCategoryFilter === cat
-                                ? 'bg-gradient-to-r from-rose-500 to-orange-500 text-white shadow-xs font-bold'
-                                : 'bg-[#FFF0F3] hover:bg-rose-100 text-stone-700 border border-rose-200'
-                            }`}
-                          >
-                            <span>{cat}</span>
-                          </button>
-                        ))}
-                      </div>
+                      {/* Collapsible Content */}
+                      {isMatrixDropdownOpen && (
+                        <>
+                          {/* Segment Filter Pills */}
+                          <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-semibold">
+                            {heatmapCategories.map(cat => (
+                              <button
+                                key={cat}
+                                onClick={() => setHeatmapCategoryFilter(cat)}
+                                className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1.5 ${
+                                  heatmapCategoryFilter === cat
+                                    ? 'bg-gradient-to-r from-rose-500 to-orange-500 text-white shadow-xs font-bold'
+                                    : 'bg-[#FFF0F3] hover:bg-rose-100 text-stone-700 border border-rose-200'
+                                }`}
+                              >
+                                <span>{cat}</span>
+                              </button>
+                            ))}
+                          </div>
 
-                      {/* Elevated Clinical Table */}
-                      <div className="overflow-x-auto -mx-5 px-5">
-                        <table className="w-full text-left border-collapse min-w-[700px]">
-                          <thead>
+                          {/* Elevated Clinical Table */}
+                          <div className="overflow-x-auto -mx-5 px-5">
+                            <table className="w-full text-left border-collapse min-w-[700px]">
+                              <thead>
                             <tr className="border-y border-rose-100 text-[11px] font-bold text-rose-900/70 uppercase tracking-wider bg-[#FFF5F7]">
                               <th className="py-3 px-3">Competency / Skill</th>
                               <th className="py-3 px-3">Category</th>
@@ -750,6 +832,8 @@ export default function App() {
                           </tbody>
                         </table>
                       </div>
+                        </>
+                      )}
 
                     </div>
 
@@ -816,6 +900,36 @@ export default function App() {
                             <p className="text-xs text-stone-600 leading-relaxed">
                               {rec.recommended_action}
                             </p>
+
+                            {/* Verified Learning Resources Near Suggested Course */}
+                            {(() => {
+                              const resList = getResourcesForCourse(rec.recommended_action, rec.skill_name, [rec.skill_name]);
+                              return resList && resList.length > 0 ? (
+                                <div className="p-2.5 rounded-lg bg-white/90 border border-rose-200/80 space-y-1.5">
+                                  <span className="text-[10px] font-bold text-rose-800 uppercase tracking-wide flex items-center gap-1">
+                                    <BookOpen className="w-3 h-3 text-rose-600" />
+                                    Course Learning Resources &amp; Guides:
+                                  </span>
+                                  <div className="flex flex-col gap-1">
+                                    {resList.map((res, rIdx) => (
+                                      <a
+                                        key={rIdx}
+                                        href={res.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="text-[11px] text-rose-700 hover:text-rose-900 hover:underline flex items-center justify-between group/link bg-[#FFF5F7] px-2 py-1 rounded border border-rose-100 transition-colors"
+                                      >
+                                        <span className="truncate max-w-[210px] font-medium">{res.title}</span>
+                                        <span className="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-white text-stone-600 border border-rose-200 shrink-0 flex items-center gap-0.5">
+                                          {res.provider} <ExternalLink className="w-2.5 h-2.5" />
+                                        </span>
+                                      </a>
+                                    ))}
+                                  </div>
+                                </div>
+                              ) : null;
+                            })()}
 
                             <div className="flex items-center justify-between pt-1">
                               <span className={rec.priority === 'HIGH' ? 'badge-critical text-[10px]' : 'badge-warning text-[10px]'}>
@@ -929,6 +1043,48 @@ export default function App() {
                               ))}
                             </div>
                           </div>
+
+                          {/* Curated Course Learning Resources */}
+                          {(() => {
+                            const courseRes = getResourcesForCourse(course.name, course.description, course.mapped_skills);
+                            return courseRes && courseRes.length > 0 ? (
+                              <div className="mt-4 pt-3 border-t border-rose-100 space-y-2">
+                                <span className="text-[11px] font-bold text-stone-900 uppercase tracking-wide flex items-center gap-1.5">
+                                  <BookOpen className="w-3.5 h-3.5 text-rose-600" />
+                                  Curated Course Learning Resources &amp; Lecture Materials:
+                                </span>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                  {courseRes.map((r, rIdx) => (
+                                    <a
+                                      key={rIdx}
+                                      href={r.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="p-2.5 rounded-xl bg-gradient-to-r from-[#FFF5F7] to-white border border-rose-200 hover:border-rose-400 hover:shadow-xs transition-all flex flex-col justify-between group/res text-left"
+                                    >
+                                      <div>
+                                        <div className="flex items-center justify-between gap-1 mb-1">
+                                          <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-white text-stone-600 border border-rose-200">
+                                            {r.type}
+                                          </span>
+                                          <span className="text-[10px] text-stone-400 font-medium">
+                                            {r.provider}
+                                          </span>
+                                        </div>
+                                        <h5 className="text-xs font-bold text-stone-900 group-hover/res:text-rose-700 transition-colors line-clamp-2">
+                                          {r.title}
+                                        </h5>
+                                      </div>
+                                      <div className="flex items-center gap-1 text-[10px] font-bold text-rose-600 group-hover/res:text-rose-800 mt-2">
+                                        <span>Open Resource</span>
+                                        <ExternalLink className="w-2.5 h-2.5" />
+                                      </div>
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : null;
+                          })()}
                         </div>
                       ))}
                     </div>
@@ -940,20 +1096,38 @@ export default function App() {
 
         {/* VIEW 2: STUDENT PATHWAY VIEW */}
         {activeRole === 'student' && (
-          <StudentView dashboardData={dashboardData} />
+          <StudentView 
+            dashboardData={currentDisplayData}
+            completedSkills={completedSkills}
+            onToggleCompleteSkill={handleToggleCompleteSkill}
+            onOpenResumeModal={() => setIsResumeModalOpen(true)}
+          />
         )}
 
         {/* VIEW 3: INDUSTRY INSIGHTS VIEW */}
         {activeRole === 'industry' && (
-          <IndustryView jobsData={jobsData} dashboardData={dashboardData} />
+          <IndustryView 
+            jobsData={jobsData} 
+            dashboardData={currentDisplayData}
+            onOpenResumeModal={() => setIsResumeModalOpen(true)}
+          />
         )}
       </main>
 
-      {/* Dynamic File Upload Modal */}
+      {/* Dynamic File Upload Modal (Syllabus) */}
       <FileUploadModal 
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         onUploadSuccess={handleUploadSuccess}
+        apiBase={API_BASE}
+      />
+
+      {/* Dynamic Resume Intelligence Modal */}
+      <ResumeUploadModal
+        isOpen={isResumeModalOpen}
+        onClose={() => setIsResumeModalOpen(false)}
+        jobsData={jobsData}
+        curriculumId={selectedCurriculumId}
         apiBase={API_BASE}
       />
     </div>
